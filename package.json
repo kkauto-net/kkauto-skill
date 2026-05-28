@@ -1,0 +1,36 @@
+{
+  "name": "kkauto-skill",
+  "version": "0.1.0",
+  "description": "Install and update kkAuto AI-agent skills and MCP config.",
+  "type": "module",
+  "bin": {
+    "kkauto-skill": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "docs",
+    "skills",
+    "templates",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node scripts/copy-assets.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "pack:dry": "npm pack --dry-run"
+  },
+  "dependencies": {
+    "@iarna/toml": "^2.2.5",
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.15",
+    "typescript": "^5.5.4",
+    "vitest": "^4.1.7"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}

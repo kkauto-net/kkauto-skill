@@ -1,0 +1,7 @@
+[mcp_servers.kkauto]
+command = "npx"
+args = ["-y", "kkauto-mcp"]
+
+[mcp_servers.kkauto.env]
+KK_API_BASE_URL = "https://your-tenant.example.com"
+KK_API_TOKEN = "paste-token-here"

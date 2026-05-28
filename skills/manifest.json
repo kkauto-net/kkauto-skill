@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "defaultPacks": ["core", "source-workflows", "fb-posts"],
+  "packs": {
+    "core": {
+      "required": true,
+      "description": "kkAuto safety, auth, MCP usage, and confirmation rules."
+    },
+    "fb-posts": {
+      "required": false,
+      "description": "Create, inspect, update, and delete kkAuto FB Posts safely.",
+      "requiresMcpTools": ["list_fb_posts", "get_fb_post", "create_fb_post", "update_fb_post", "delete_fb_post"]
+    },
+    "source-posts": {
+      "required": false,
+      "description": "Search, inspect, create, update, and status-manage Source Posts.",
+      "requiresMcpTools": ["list_source_posts", "get_source_post", "search_source_posts", "create_source_post", "update_source_post", "update_source_post_status", "delete_source_post"]
+    },
+    "source-workflows": {
+      "required": false,
+      "description": "Claim Source Workflow posts and create FB Posts from owned claims.",
+      "requiresMcpTools": ["get_source_workflow_agent_context", "claim_source_workflow_posts", "create_fb_post_from_source_workflow_claim", "release_source_workflow_claim", "fail_source_workflow_claim"]
+    },
+    "source-crawlers": {
+      "required": false,
+      "description": "Inspect and manage Source Crawlers, lifecycle, hashtags, and account relations.",
+      "requiresMcpTools": ["list_source_crawlers", "get_source_crawler", "create_source_crawler", "update_source_crawler", "pause_source_crawler", "resume_source_crawler", "add_source_crawler_accounts_bulk", "delete_source_crawler"]
+    }
+  }
+}
