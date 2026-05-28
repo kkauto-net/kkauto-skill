@@ -1,5 +1,5 @@
 ---
-name: kkauto-fb-posts
+name: kk-fb-posts
 description: Use this skill for kkAuto FB Post workflows: listing posts, inspecting one post, drafting posts, creating, updating, uploading media, or deleting FB Posts through kkAuto MCP tools.
 ---
 

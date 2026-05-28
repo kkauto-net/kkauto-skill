@@ -1,5 +1,5 @@
 ---
-name: kkauto-core
+name: kk-core
 description: Use this skill when operating kkAuto through configured MCP tools, installing kkAuto agent workflows, handling KK_API_BASE_URL or KK_API_TOKEN, or planning Facebook/source automation via kkAuto. Always enforce token secrecy, read-before-write, and confirmation-before-mutation.
 ---
 

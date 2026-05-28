@@ -1,5 +1,5 @@
 ---
-name: kkauto-source-posts
+name: kk-source-posts
 description: Use this skill for kkAuto Source Post workflows: search, inspect, create, update, status changes, statistics, grouping, and safe deletion through MCP tools.
 ---
 

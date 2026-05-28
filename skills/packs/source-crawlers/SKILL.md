@@ -1,5 +1,5 @@
 ---
-name: kkauto-source-crawlers
+name: kk-source-crawlers
 description: Use this skill for kkAuto Source Crawler workflows: listing crawlers, inspecting crawler state, creating/updating crawlers, pause/resume, hashtag relations, account relations, and guarded deletion.
 ---
 

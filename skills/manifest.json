@@ -18,7 +18,7 @@
     },
     "source-workflows": {
       "required": false,
-      "description": "Claim Source Workflow posts and create FB Posts from owned claims.",
+      "description": "kk-workflows: claim Source Workflow posts by id/tags, rewrite from workflow Prompt Instruction, remake images, and create FB Posts from owned claims.",
       "requiresMcpTools": ["get_source_workflow_agent_context", "claim_source_workflow_posts", "create_fb_post_from_source_workflow_claim", "release_source_workflow_claim", "fail_source_workflow_claim"]
     },
     "source-crawlers": {

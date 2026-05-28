@@ -3,7 +3,7 @@
 ## Default Packs
 
 - `core`: required safety, auth, MCP usage, confirmation rules.
-- `source-workflows`: Source-to-FB claim/write workflow for AI-agent mode.
+- `source-workflows`: `kk-workflows` skill — claim source posts by id/tags, rewrite from workflow Prompt Instruction, remake images, and create FB posts (AI-agent mode).
 - `fb-posts`: FB Post creation/update/media/delete guidance.
 
 ## Optional Packs
