@@ -1,4 +1,5 @@
-export type AgentName = 'claude' | 'opencode' | 'codex' | 'antigravity';
+export type AgentName = 'claude' | 'opencode' | 'codex' | 'antigravity' | 'cursor';
+export type InstallAgentSelector = AgentName | 'auto' | 'all';
 
 export interface AgentDetection {
   detected: boolean;
@@ -9,7 +10,7 @@ export interface AgentDetection {
 export interface InstallTarget {
   type: 'skill' | 'mcp-config';
   path: string;
-  mode: 'directory' | 'file' | 'json-merge' | 'toml-merge' | 'manual' | 'command';
+  mode: 'directory' | 'file' | 'cursor-rules' | 'json-merge' | 'toml-merge' | 'manual' | 'command';
 }
 
 export interface McpConfigInput {
@@ -21,6 +22,7 @@ export interface McpConfigInput {
 
 export interface AdapterContext {
   homeDir: string;
+  projectDir?: string;
 }
 
 export interface AgentAdapter {

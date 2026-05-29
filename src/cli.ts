@@ -5,6 +5,7 @@ import { runInstall } from './commands/install.js';
 import { runList } from './commands/list.js';
 import { runPrintConfig } from './commands/print-config.js';
 import { runUpdate } from './commands/update.js';
+import { supportedAgentList, supportedSelectorList } from './agents/index.js';
 import { redact } from './core/redaction.js';
 
 const program = new Command();
@@ -17,7 +18,7 @@ program
 program
   .command('install')
   .description('Install kkAuto skill packs and MCP config for an AI agent.')
-  .option('--agent <agent>', 'auto, claude, opencode, codex, antigravity', 'auto')
+  .option('--agent <agent>', supportedSelectorList, 'auto')
   .option('--packs <csv>', 'comma-separated packs')
   .option('--dry-run', 'preview writes only')
   .option('--no-mcp-config', 'install skills only')
@@ -47,7 +48,7 @@ program
 program
   .command('print-config')
   .description('Print MCP config for an agent without writing files.')
-  .requiredOption('--agent <agent>', 'claude, opencode, codex, antigravity')
+  .requiredOption('--agent <agent>', supportedAgentList)
   .option('--json', 'machine-readable output')
   .action((options) => runPrintConfig(options).catch(handleError));
 

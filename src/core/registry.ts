@@ -39,8 +39,15 @@ export async function writeRegistry(registry: InstallRegistry, homeDir?: string)
 
 export async function upsertInstall(install: RegistryInstall, homeDir?: string): Promise<void> {
   const registry = await readRegistry(homeDir);
-  const index = registry.installs.findIndex((item) => item.agent === install.agent);
+  const index = registry.installs.findIndex((item) => sameInstallTarget(item, install));
   if (index >= 0) registry.installs[index] = install;
   else registry.installs.push(install);
   await writeRegistry(registry, homeDir);
+}
+
+function sameInstallTarget(left: RegistryInstall, right: RegistryInstall): boolean {
+  if (left.agent !== right.agent) return false;
+  if (left.agent !== 'cursor') return true;
+  const leftPaths = new Set(left.targets.map((target) => target.path));
+  return right.targets.some((target) => leftPaths.has(target.path));
 }

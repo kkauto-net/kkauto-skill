@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "kkauto": {
+      "command": "npx",
+      "args": ["-y", "kkauto-mcp"],
+      "env": {
+        "KK_API_BASE_URL": "https://your-tenant.example.com",
+        "KK_API_TOKEN": "paste-token-here"
+      }
+    }
+  }
+}
