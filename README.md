@@ -16,11 +16,11 @@ npx kkauto-skill install
 
 Interactive install (TTY):
 
-1. Chọn AI agents (mặc định chọn hết)
-2. Nhập kkAuto URL + API token (từ `/wtadmin/mcp`)
-3. Cài skills + MCP config cho từng agent
+1. Select AI agents (default: all checked)
+2. Enter kkAuto URL + API token from `/wtadmin/mcp`
+3. Install skills + MCP config for each selected agent
 
-Credentials lưu tại `~/.config/kkauto-skill/credentials.env`. MCP configs dùng wrapper load file này — không ghi token inline vào `.cursor/mcp.json` hay config agent khác.
+Credentials are stored in `~/.config/kkauto-skill/credentials.env`. MCP configs use a wrapper that loads this file; real tokens are not written inline to `.cursor/mcp.json` or other agent configs by default.
 
 ## Commands
 
