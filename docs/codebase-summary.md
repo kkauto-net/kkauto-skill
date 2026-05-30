@@ -69,7 +69,7 @@ Default packs from `skills/manifest.json`: `core`, `source-workflows`, `fb-posts
 
 ## Known Internal Notes
 
-- `src/cli.ts` currently hardcodes Commander version `0.1.0` while `package.json` is `0.1.1`.
+- `src/cli.ts` reads Commander version from `package.json`.
 - `doctor` prints JSON-shaped output regardless of `--json`; `--json` does not change format in current code.
 - `doctor` credentials `modeOk` is true for any existing parseable credentials file; current code does not stat file permissions.
 - Antigravity adapter can report a manual legacy MCP target when both legacy candidate files exist; install writes scope-derived targets for normal scope installs.

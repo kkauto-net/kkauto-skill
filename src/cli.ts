@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
+import { createRequire } from 'node:module';
 import { runDoctor } from './commands/doctor.js';
 import { runInstall } from './commands/install.js';
 import { runList } from './commands/list.js';
@@ -8,12 +9,15 @@ import { runUpdate } from './commands/update.js';
 import { supportedAgentList, supportedSelectorList } from './agents/index.js';
 import { redact } from './core/redaction.js';
 
+const require = createRequire(import.meta.url);
+const packageJson = require('../package.json') as { version: string };
+
 const program = new Command();
 
 program
   .name('kkauto-skill')
   .description('Install and update kkAuto AI-agent skills and MCP config.')
-  .version('0.1.0');
+  .version(packageJson.version);
 
 program
   .command('install')
