@@ -10,18 +10,18 @@ describe('config writer', () => {
     const dir = await mkdtemp(join(tmpdir(), 'kkauto-json-'));
     const path = join(dir, 'mcp_config.json');
     await writeFile(path, JSON.stringify({ keep: true, mcpServers: { other: { command: 'x' } } }), 'utf8');
-    await mergeJsonMcpConfig(path, defaultMcpInput());
+    await mergeJsonMcpConfig(path, defaultMcpInput('placeholder'));
     const parsed = JSON.parse(await readFile(path, 'utf8'));
     expect(parsed.keep).toBe(true);
     expect(parsed.mcpServers.other.command).toBe('x');
     expect(parsed.mcpServers.kkauto.command).toBe('npx');
   });
 
-  it('preserves existing kkauto JSON env secrets', async () => {
+  it('preserves existing kkauto JSON env secrets in placeholder mode', async () => {
     const dir = await mkdtemp(join(tmpdir(), 'kkauto-json-secret-'));
     const path = join(dir, 'mcp_config.json');
     await writeFile(path, JSON.stringify({ mcpServers: { kkauto: { env: { KK_API_TOKEN: 'real-token', EXTRA: 'keep' } } } }), 'utf8');
-    await mergeJsonMcpConfig(path, defaultMcpInput());
+    await mergeJsonMcpConfig(path, defaultMcpInput('placeholder'));
     const parsed = JSON.parse(await readFile(path, 'utf8'));
     expect(parsed.mcpServers.kkauto.env.KK_API_TOKEN).toBe('real-token');
     expect(parsed.mcpServers.kkauto.env.EXTRA).toBe('keep');
@@ -31,7 +31,7 @@ describe('config writer', () => {
     const dir = await mkdtemp(join(tmpdir(), 'kkauto-toml-'));
     const path = join(dir, 'config.toml');
     await writeFile(path, 'model = "gpt"\n', 'utf8');
-    await mergeTomlMcpConfig(path, defaultMcpInput());
+    await mergeTomlMcpConfig(path, defaultMcpInput('placeholder'));
     const content = await readFile(path, 'utf8');
     expect(content).toContain('model = "gpt"');
     expect(content).toContain('[mcp_servers.kkauto]');
@@ -41,7 +41,7 @@ describe('config writer', () => {
     const dir = await mkdtemp(join(tmpdir(), 'kkauto-toml-secret-'));
     const path = join(dir, 'config.toml');
     await writeFile(path, '[mcp_servers.kkauto]\ncommand = "old"\n[mcp_servers.kkauto.env]\nKK_API_TOKEN = "real-token"\n', 'utf8');
-    await mergeTomlMcpConfig(path, defaultMcpInput());
+    await mergeTomlMcpConfig(path, defaultMcpInput('placeholder'));
     const content = await readFile(path, 'utf8');
     expect(content).toContain('KK_API_TOKEN = "real-token"');
     expect(content).toContain('command = "npx"');

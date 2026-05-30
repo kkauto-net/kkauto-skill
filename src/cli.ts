@@ -17,12 +17,18 @@ program
 
 program
   .command('install')
-  .description('Install kkAuto skill packs and MCP config for an AI agent.')
+  .description('Install kkAuto skill packs and MCP config for AI agents.')
   .option('--agent <agent>', supportedSelectorList, 'auto')
   .option('--packs <csv>', 'comma-separated packs')
   .option('--dry-run', 'preview writes only')
   .option('--no-mcp-config', 'install skills only')
   .option('--json', 'machine-readable output')
+  .option('--no-interactive', 'disable prompts (CI/scripts)')
+  .option('--base-url <url>', 'kkAuto tenant base URL')
+  .option('--api-token <token>', 'kkAuto API token (prefer env var)')
+  .option('--skip-credentials', 'do not update credentials.env')
+  .option('--use-placeholders', 'write placeholder MCP env instead of credentials wrapper')
+  .option('--antigravity-scopes <csv>', 'workspace,global,shared')
   .action((options) => { void runInstall(options).catch(handleError); });
 
 program
@@ -30,6 +36,7 @@ program
   .description('Refresh previously installed kkAuto skill packs from this package.')
   .option('--dry-run', 'preview writes only')
   .option('--json', 'machine-readable output')
+  .option('--use-placeholders', 'keep placeholder MCP env on refresh')
   .action((options) => runUpdate(options).catch(handleError));
 
 program
@@ -50,6 +57,7 @@ program
   .description('Print MCP config for an agent without writing files.')
   .requiredOption('--agent <agent>', supportedAgentList)
   .option('--json', 'machine-readable output')
+  .option('--use-placeholders', 'print inline placeholder env instead of wrapper')
   .action((options) => runPrintConfig(options).catch(handleError));
 
 function handleError(error: unknown): never {

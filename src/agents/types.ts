@@ -10,19 +10,25 @@ export interface AgentDetection {
 export interface InstallTarget {
   type: 'skill' | 'mcp-config';
   path: string;
-  mode: 'directory' | 'file' | 'cursor-rules' | 'json-merge' | 'toml-merge' | 'manual' | 'command';
+  mode: 'directory' | 'file' | 'cursor-rules' | 'skill-file' | 'json-merge' | 'toml-merge' | 'manual' | 'command';
 }
+
+export type McpLaunchMode = 'wrapper' | 'placeholder';
 
 export interface McpConfigInput {
   serverName: 'kkauto';
-  command: 'npx';
+  launchMode: McpLaunchMode;
+  command: string;
   args: string[];
-  env: Record<'KK_API_BASE_URL' | 'KK_API_TOKEN', string>;
+  env?: Record<string, string>;
 }
+
+export type AntigravityScope = 'workspace' | 'global' | 'shared';
 
 export interface AdapterContext {
   homeDir: string;
   projectDir?: string;
+  antigravityScopes?: AntigravityScope[];
 }
 
 export interface AgentAdapter {

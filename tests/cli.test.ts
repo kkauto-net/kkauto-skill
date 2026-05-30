@@ -59,11 +59,11 @@ describe('compiled CLI behavior', () => {
     await mkdir(join(homeDir, '.config', 'opencode'), { recursive: true });
     await mkdir(join(homeDir, '.codex'), { recursive: true });
 
-    await expect(execCli(['install', '--agent', 'auto', '--dry-run', '--json'], {
+    await expect(execCli(['install', '--agent', 'auto', '--dry-run', '--json', '--no-interactive'], {
       HOME: homeDir,
       KKAUTO_SKILL_ROOT: process.cwd()
     })).rejects.toMatchObject({
-      stderr: expect.stringContaining('Pass --agent <name> or --agent all')
+      stderr: expect.stringContaining('--agent all')
     });
   });
 
@@ -73,13 +73,13 @@ describe('compiled CLI behavior', () => {
     await mkdir(join(homeDir, '.config', 'opencode'), { recursive: true });
     await mkdir(join(projectDir, '.cursor'), { recursive: true });
 
-    const { stdout } = await execFileAsync('node', [join(process.cwd(), 'dist', 'cli.js'), 'install', '--agent', 'all', '--dry-run', '--json'], {
+    const { stdout } = await execFileAsync('node', [join(process.cwd(), 'dist', 'cli.js'), 'install', '--agent', 'all', '--dry-run', '--json', '--no-interactive', '--use-placeholders'], {
       cwd: projectDir,
       env: { ...process.env, HOME: homeDir, KKAUTO_SKILL_ROOT: process.cwd() }
     });
     const parsed = JSON.parse(stdout);
     expect(parsed.selector).toBe('all');
-    expect(parsed.results.map((item: { agent: string }) => item.agent)).toEqual(['opencode', 'cursor']);
+    expect(parsed.results.map((item: { agent: string }) => item.agent)).toEqual(['claude', 'opencode', 'codex', 'antigravity', 'cursor']);
     expect(parsed.results.every((item: { ok: boolean }) => item.ok)).toBe(true);
   });
 });

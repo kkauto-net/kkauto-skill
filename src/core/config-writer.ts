@@ -19,13 +19,20 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function serverObject(input: McpConfigInput, existing?: unknown): Record<string, unknown> {
+  if (input.launchMode === 'wrapper') {
+    return {
+      command: input.command,
+      args: input.args
+    };
+  }
   const existingServer = isRecord(existing) ? existing : {};
   const existingEnv = isRecord(existingServer.env) ? existingServer.env : {};
+  const inputEnv = input.env ?? {};
   return {
     ...existingServer,
     command: input.command,
     args: input.args,
-    env: { ...input.env, ...existingEnv }
+    env: { ...inputEnv, ...existingEnv }
   };
 }
 

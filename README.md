@@ -1,8 +1,8 @@
 # kkauto-skill
 
-Install and update kkAuto AI-agent skills plus local MCP config for Claude, OpenCode, Codex, Antigravity CLI, and Cursor.
+Install and update kkAuto AI-agent skills plus MCP config for Claude Code, OpenCode, Codex, Antigravity CLI, and Cursor.
 
-`kkauto-skill` is the instruction/config layer only. Runtime stays `kkauto-mcp`:
+Runtime stays `kkauto-mcp`:
 
 ```bash
 npx -y kkauto-mcp
@@ -11,42 +11,38 @@ npx -y kkauto-mcp
 ## Quick Start
 
 ```bash
-npx kkauto-skill install --agent auto
-npx kkauto-skill doctor --agent opencode
+npx kkauto-skill install
 ```
 
-After install, edit your agent MCP config and replace placeholders:
+Interactive install (TTY):
 
-```text
-KK_API_BASE_URL=https://your-tenant.example.com
-KK_API_TOKEN=paste-token-here
-```
+1. Chọn AI agents (mặc định chọn hết)
+2. Nhập kkAuto URL + API token (từ `/wtadmin/mcp`)
+3. Cài skills + MCP config cho từng agent
 
-Do not paste real tokens into chat, issues, logs, or docs.
-For Cursor project installs, do not commit `.cursor/mcp.json` after replacing placeholders with real tokens.
+Credentials lưu tại `~/.config/kkauto-skill/credentials.env`. MCP configs dùng wrapper load file này — không ghi token inline vào `.cursor/mcp.json` hay config agent khác.
 
 ## Commands
 
 ```bash
-npx kkauto-skill install --agent claude --packs core,fb-posts,source-workflows
-npx kkauto-skill install --agent all
-npx kkauto-skill install --agent cursor
+npx kkauto-skill install
+npx kkauto-skill install --agent all --no-interactive --use-placeholders
+npx kkauto-skill install --agent antigravity --antigravity-scopes global
 npx kkauto-skill update
 npx kkauto-skill list
 npx kkauto-skill print-config --agent codex
-npx kkauto-skill doctor --agent antigravity --json
+npx kkauto-skill doctor --json
 ```
 
-Use `--agent auto` for safe detection. If multiple supported agents are detected in a non-interactive shell, pass a concrete agent name or `--agent all`.
+Non-interactive with credentials:
 
-## Safety
+```bash
+KK_API_BASE_URL=https://your-tenant.example.com \
+KK_API_TOKEN=paste-token-here \
+npx kkauto-skill install --agent all --no-interactive
+```
 
-- No direct kkAuto HTTP API calls.
-- No `kkauto-mcp` reimplementation.
-- No postinstall scripts.
-- No raw token printing.
-- Delete tools stay disabled unless you explicitly configure `KK_MCP_ENABLE_DELETE=true` outside this installer.
-- Config writes use backups and conservative merge behavior.
+Do not paste real tokens into chat, issues, logs, or docs.
 
 ## Default Packs
 
@@ -60,7 +56,7 @@ See `docs/packs.md` for all packs.
 
 Supported values: `claude`, `opencode`, `codex`, `antigravity`, `cursor`.
 
-See `docs/agents.md` for exact config behavior and limitations.
+See `docs/agents.md` for exact paths, Antigravity scopes, and MCP behavior.
 
 ## License
 

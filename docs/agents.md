@@ -2,10 +2,14 @@
 
 Supported agents: `claude`, `opencode`, `codex`, `antigravity`, `cursor`.
 
-## Claude
+All agents use `npx -y kkauto-mcp` as the MCP runtime. By default, `kkauto-skill install` stores `KK_API_BASE_URL` and `KK_API_TOKEN` in `~/.config/kkauto-skill/credentials.env` (mode `600`) and writes MCP configs that load that file via a bash wrapper — secrets are not inlined in agent config files.
+
+Use `--use-placeholders` for legacy inline placeholder env blocks.
+
+## Claude Code
 
 - Skill path: `~/.claude/skills/kkauto`
-- MCP config target: `~/.claude/mcp.json`
+- MCP config target: `~/.claude/.mcp.json` (fallback: `~/.claude/mcp.json`)
 - Format: JSON `mcpServers.kkauto`
 
 ## OpenCode
@@ -19,32 +23,53 @@ Supported agents: `claude`, `opencode`, `codex`, `antigravity`, `cursor`.
 - Skill path: `~/.codex/skills/kkauto`
 - MCP config target: `~/.codex/config.toml`
 - Format: TOML `[mcp_servers.kkauto]`
-- Installer uses safe TOML parse/merge. Future versions may prefer `codex mcp add` when available and stable.
 
 ## Antigravity CLI
 
-- Skill path: `~/.gemini/antigravity/skills/kkauto`
-- Primary MCP config candidate: `~/.gemini/antigravity/mcp_config.json`
-- Secondary candidate: `~/.gemini/config/mcp_config.json`
-- Format: JSON `mcpServers.kkauto`
-- If both config candidates exist, installer refuses silent auto-write and prints manual guidance.
+Skills (per pack, e.g. `core`, `fb-posts`):
+
+| Scope | Path |
+| --- | --- |
+| Workspace | `.agents/skills/{pack}/SKILL.md` |
+| Global (default) | `~/.gemini/antigravity-cli/skills/{pack}/SKILL.md` |
+| Shared | `~/.gemini/skills/{pack}/SKILL.md` |
+
+MCP config:
+
+| Scope | Path |
+| --- | --- |
+| Shared / Global | `~/.gemini/config/mcp_config.json` |
+| Workspace | `.agents/mcp_config.json` |
+
+TTY install prompts for skill scopes (default: Global only). Non-interactive: `--antigravity-scopes global|workspace,shared`.
+
+Legacy `~/.gemini/antigravity/mcp_config.json`: if multiple legacy candidates conflict, installer prints manual guidance.
 
 ## Cursor
 
-- Rule path: `.cursor/rules/kkauto-*.mdc` in the current project.
-- MCP config target: `.cursor/mcp.json` in the current project.
-- Format: JSON `mcpServers.kkauto`.
-- Installer writes project-local Cursor artifacts only. It does not write global Cursor config or legacy `.cursorrules`.
-- If you replace placeholders with real tokens in `.cursor/mcp.json`, do not commit that file. Add it to `.gitignore` or keep token values in an untracked local config.
+- Rules: `.cursor/rules/kkauto-*.mdc` in the current project
+- MCP config: `.cursor/mcp.json` in the current project
+- Format: JSON `mcpServers.kkauto`
+- With credentials wrapper, `.cursor/mcp.json` contains no inline token and is safer to commit
 
 ## Install Selection
 
-- `--agent auto` installs the single detected agent. In an interactive TTY, it prompts when multiple agents are detected.
-- `--agent all` installs all detected supported agents and reports per-agent success or failure.
-- In `--json` or non-interactive mode, `auto` never prompts; pass a concrete agent or `all` when multiple agents are detected.
+Interactive `npx kkauto-skill install`:
+
+1. Checkbox all 5 agents (default: all checked)
+2. URL + API token → `credentials.env`
+3. Antigravity scope picker when Antigravity is selected (default: Global)
+
+Non-interactive:
+
+```bash
+KK_API_BASE_URL=https://tenant.example.com KK_API_TOKEN=... \
+  npx kkauto-skill install --agent all --no-interactive
+
+npx kkauto-skill install --agent cursor --base-url https://tenant.example.com --api-token ... --no-interactive
+```
 
 ## Notes
 
-- All agents use `npx -y kkauto-mcp`.
-- `print-config` never writes files.
-- `doctor` redacts secret-like values.
+- `print-config --agent <name>` renders wrapper config when credentials exist
+- `doctor` reports credentials file health and per-agent MCP wrapper status without printing secrets

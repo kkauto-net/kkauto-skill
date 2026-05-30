@@ -13,6 +13,7 @@ export interface UpdateOptions {
   json?: boolean;
   homeDir?: string;
   emit?: boolean;
+  usePlaceholders?: boolean;
 }
 
 export async function runUpdate(options: UpdateOptions): Promise<void> {
@@ -27,12 +28,33 @@ export async function runUpdate(options: UpdateOptions): Promise<void> {
   if (options.json) {
     const installs: InstallResult[] = [];
     for (const install of registry.installs) {
-      installs.push(await runInstall({ agent: install.agent, packs: install.packs.join(','), dryRun: options.dryRun, json: true, emit: false, homeDir: options.homeDir, projectDir: cursorProjectDir(install) }) as InstallResult);
+      installs.push(await runInstall({
+        agent: install.agent,
+        packs: install.packs.join(','),
+        dryRun: options.dryRun,
+        json: true,
+        emit: false,
+        noInteractive: true,
+        skipCredentials: !options.usePlaceholders,
+        usePlaceholders: options.usePlaceholders,
+        homeDir: options.homeDir,
+        projectDir: cursorProjectDir(install)
+      }) as InstallResult);
     }
     if (options.emit !== false) process.stdout.write(`${JSON.stringify({ installs }, null, 2)}\n`);
     return;
   }
   for (const install of registry.installs) {
-    await runInstall({ agent: install.agent, packs: install.packs.join(','), dryRun: options.dryRun, emit: options.emit, homeDir: options.homeDir, projectDir: cursorProjectDir(install) });
+    await runInstall({
+      agent: install.agent,
+      packs: install.packs.join(','),
+      dryRun: options.dryRun,
+      emit: options.emit,
+      noInteractive: true,
+      skipCredentials: !options.usePlaceholders,
+      usePlaceholders: options.usePlaceholders,
+      homeDir: options.homeDir,
+      projectDir: cursorProjectDir(install)
+    });
   }
 }

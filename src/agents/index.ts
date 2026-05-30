@@ -19,8 +19,12 @@ export const adapters: Record<AgentName, AgentAdapter> = {
   cursor: cursorAdapter
 };
 
-export function createContext(homeDir = homedir(), projectDir = process.cwd()): AdapterContext {
-  return { homeDir, projectDir };
+export function createContext(
+  homeDir = homedir(),
+  projectDir = process.cwd(),
+  antigravityScopes?: import('./types.js').AntigravityScope[]
+): AdapterContext {
+  return { homeDir, projectDir, antigravityScopes };
 }
 
 export function getAdapter(name: AgentName): AgentAdapter {
