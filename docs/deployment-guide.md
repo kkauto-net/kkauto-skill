@@ -8,13 +8,28 @@ This project deploys as an npm CLI package. There is no hosted service, server d
 
 | Step | Command | Purpose |
 | --- | --- | --- |
-| Install deps | `npm install` | Match CI dependency install. |
+| Install deps | `npm ci` | Match CI lockfile install. |
 | Typecheck | `npm run typecheck` | Verify strict TypeScript without emit. |
-| Test | `npm test` | Run Vitest suite. |
+| Unit tests | `npm run test:unit` | Fast helper/config coverage. |
+| Integration tests | `npm run test:integration` | Temp filesystem install/update coverage. |
+| Security tests | `npm run test:security` | Redaction, wrapper, chmod, and CLI no-leak coverage. |
 | Build | `npm run build` | Compile to `dist` and copy `skills`/`templates`. |
+| E2E | `npm run test:e2e` | Run compiled CLI sandbox tests. |
+| Audit | `npm run security:audit` | Fail high/critical npm advisories. |
 | Pack check | `npm pack --dry-run` | Inspect published files. |
 
-Required order after install: `typecheck -> test -> build -> pack dry run`.
+Required order after install: `typecheck -> tests -> build -> e2e -> audit -> pack dry run`.
+
+## GitHub Workflows
+
+| Workflow | Trigger | Purpose |
+| --- | --- | --- |
+| `ci.yml` | Push and pull request | Unit/integration/E2E on Node 20/22 Ubuntu/macOS; security tests and audit on Node 20/22 Ubuntu; build-pack on Ubuntu Node 20; dependency review on PRs; final `ci-pass` aggregate. |
+| `codeql.yml` | Push, pull request, weekly | JavaScript/TypeScript CodeQL analysis. |
+| `nightly.yml` | Daily and manual dispatch | Full Vitest suite on Node 20/22 Ubuntu/macOS plus local tarball smoke. |
+| `cleanup-artifacts.yml` | Daily and manual dispatch | Purge old GitHub Actions artifacts only; manual delete remains confirmation-gated. |
+
+CI and nightly do not call `kkauto-mcp`, kkAuto APIs, or real agent binaries. They use temp sandboxes and do not upload generated HOME/project configs.
 
 ## Package Contents
 
@@ -36,8 +51,9 @@ Required order after install: `typecheck -> test -> build -> pack dry run`.
 5. Inspect `npm pack --dry-run` output for missing assets or unexpected files.
 6. Confirm README, docs, tests, logs, and fixtures contain no real `KK_API_TOKEN`.
 7. Confirm `package.json` has no unexpected lifecycle scripts, especially no `postinstall`.
-8. Publish with npm provenance when available.
-9. Verify `npx kkauto-skill@latest --help` after publish.
+8. Confirm `npm run security:audit` has no unresolved high/critical advisories.
+9. Publish with npm provenance when available.
+10. Verify `npx kkauto-skill@latest --help` after publish.
 
 ## Runtime Install Verification
 

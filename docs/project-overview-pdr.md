@@ -25,7 +25,7 @@
 | ID | Requirement | Acceptance |
 | --- | --- | --- |
 | FR-1 | Install skill packs for supported agents. | `install --agent <name>` writes agent-specific skill targets. |
-| FR-2 | Install MCP config safely. | Default MCP config uses a wrapper that sources `~/.config/kkauto-skill/credentials.env`. |
+| FR-2 | Install MCP config safely. | Default MCP config uses a wrapper that parses whitelisted `KEY=value` lines from `~/.config/kkauto-skill/credentials.env`. |
 | FR-3 | Support default and optional packs. | Defaults are `core`, `source-workflows`, `fb-posts`; optional packs install by `--packs`. |
 | FR-4 | Always include `core`. | `resolvePacks()` prepends `core` if omitted. |
 | FR-5 | Preserve existing configs. | JSON/TOML writers merge `kkauto` server and preserve unrelated settings. |

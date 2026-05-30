@@ -2,7 +2,7 @@
 
 Supported agents: `claude`, `opencode`, `codex`, `antigravity`, `cursor`.
 
-All agents use `npx -y kkauto-mcp` as the MCP runtime. By default, `kkauto-skill install` stores `KK_API_BASE_URL` and `KK_API_TOKEN` in `~/.config/kkauto-skill/credentials.env` (mode `600`) and writes MCP configs that load that file via a bash wrapper — secrets are not inlined in agent config files.
+All agents use `npx -y kkauto-mcp` as the MCP runtime. By default, `kkauto-skill install` stores `KK_API_BASE_URL` and `KK_API_TOKEN` in `~/.config/kkauto-skill/credentials.env` (mode `600`) and writes MCP configs with a bash wrapper that parses whitelisted `KEY=value` lines literally — secrets are not inlined in agent config files.
 
 Use `--use-placeholders` for legacy inline placeholder env blocks.
 

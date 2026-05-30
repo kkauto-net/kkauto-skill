@@ -18,6 +18,13 @@
     "build": "tsc -p tsconfig.json && node scripts/copy-assets.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
+    "test:unit": "vitest run tests/redaction.test.ts tests/manifest.test.ts tests/print-config.test.ts tests/doctor.test.ts tests/config-writer.test.ts",
+    "test:integration": "vitest run tests/install.test.ts tests/update.test.ts tests/antigravity.test.ts tests/mcp-wrapper.test.ts",
+    "test:security": "vitest run tests/redaction.test.ts tests/mcp-wrapper.test.ts tests/cli.test.ts",
+    "test:e2e": "vitest run tests/cli.test.ts",
+    "test:ci": "npm run test:unit && npm run test:integration && npm run test:security",
+    "test:nightly": "npm test",
+    "security:audit": "npm audit --audit-level=high",
     "pack:dry": "npm pack --dry-run"
   },
   "dependencies": {

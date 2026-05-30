@@ -65,7 +65,7 @@ install
 
 | Mode | Trigger | Config shape |
 | --- | --- | --- |
-| Wrapper | Default when credentials exist or are provided. | `command: bash`, `args: ['-lc', 'source credentials.env ... exec npx -y kkauto-mcp']` |
+| Wrapper | Default when credentials exist or are provided. | `command: bash`, `args: ['-lc', 'parse whitelisted credentials.env keys ... exec npx -y kkauto-mcp']` |
 | Placeholder | `--use-placeholders` or no usable credentials. | `command: npx`, `args: ['-y','kkauto-mcp']`, placeholder env. |
 
 ## Build And Package

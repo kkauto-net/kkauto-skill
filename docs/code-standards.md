@@ -62,12 +62,29 @@ Standards for this TypeScript CLI package. Docs reflect current code; update tes
 
 - Add/update Vitest coverage for install/update/config-writing behavior changes.
 - Use `mkdtemp()` home/project fixtures; avoid touching real user config.
+- Test taxonomy:
+
+| Script | Scope |
+| --- | --- |
+| `npm run test:unit` | Pure helpers and render/config output tests. |
+| `npm run test:integration` | Direct command/core flows using temp home/project fixtures. |
+| `npm run test:security` | Redaction, wrapper/no-inline-token, credential mode, and CLI no-leak checks. |
+| `npm run test:e2e` | Compiled `dist/cli.js` sandbox smoke through child processes. |
+| `npm run test:ci` | Deterministic local PR-suite wrapper. |
+| `npm run test:nightly` | Full Vitest suite used by nightly workflow. |
+
+- `tests/cli.test.ts` builds `dist` in `beforeAll`; run `npm run build` first in CI for clearer failures.
+- Security and E2E tests must scrub `KK_*` env values and use fake sentinels only.
 - For substantial changes, verify in order:
 
 ```bash
 npm run typecheck
-npm test
+npm run test:unit
+npm run test:integration
+npm run test:security
 npm run build
+npm run test:e2e
+npm run security:audit
 npm pack --dry-run
 ```
 

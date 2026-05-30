@@ -15,14 +15,27 @@
 
 ## Required Verification Order
 
-- CI runs: `npm run typecheck` -> `npm test` -> `npm run build` -> `npm pack --dry-run`.
-- Match that order before finishing substantial changes.
+- CI runs: `npm run typecheck` -> granular tests -> `npm run build`/E2E -> audit/dependency review -> `npm pack --dry-run`.
+- Local substantial-change verification should match that order:
+  - `npm run typecheck`
+  - `npm run test:unit`
+  - `npm run test:integration`
+  - `npm run test:security`
+  - `npm run build`
+  - `npm run test:e2e`
+  - `npm run security:audit`
+  - `npm pack --dry-run`
 
 ## Core Commands
 
-- Install deps: `npm install`
+- Install deps: `npm ci` in CI, `npm install` for local dependency updates
 - Typecheck: `npm run typecheck`
 - Tests: `npm test`
+- Unit tests: `npm run test:unit`
+- Integration tests: `npm run test:integration`
+- Security tests: `npm run test:security`
+- Compiled CLI sandbox E2E: `npm run build && npm run test:e2e`
+- Security audit: `npm run security:audit`
 - Build: `npm run build`
 - Package contents check: `npm pack --dry-run`
 - CLI smoke examples:
@@ -53,11 +66,18 @@
 
 - `README.md`
 - `.github/workflows/ci.yml`
+- `.github/workflows/codeql.yml`
+- `.github/workflows/nightly.yml`
+- `.github/workflows/cleanup-artifacts.yml`
 - `docs/agents.md`
 - `docs/security.md`
 - `docs/deployment-guide.md`
+- `docs/code-standards.md`
 - `tests/install.test.ts`
 - `tests/update.test.ts`
+- `tests/cli.test.ts`
+- `tests/mcp-wrapper.test.ts`
+- `tests/redaction.test.ts`
 - `tests/manifest.test.ts`
 
 ## Change Guidance

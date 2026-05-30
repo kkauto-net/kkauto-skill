@@ -36,15 +36,11 @@ export function credentialsPath(homeDir = homedir()): string {
 function parseDotEnv(content: string): CredentialsData | null {
   const data: Partial<CredentialsData> = {};
   for (const line of content.split('\n')) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#')) continue;
-    const eq = trimmed.indexOf('=');
+    if (!line || line.startsWith('#')) continue;
+    const eq = line.indexOf('=');
     if (eq <= 0) continue;
-    const key = trimmed.slice(0, eq).trim();
-    let value = trimmed.slice(eq + 1).trim();
-    if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
-      value = value.slice(1, -1);
-    }
+    const key = line.slice(0, eq);
+    const value = line.slice(eq + 1);
     if (key in { KK_API_BASE_URL: 1, KK_API_TOKEN: 1, KK_MCP_ENABLE_DELETE: 1, KK_MCP_DEFAULT_STATUS: 1, KK_MCP_MAX_LIST_LIMIT: 1 }) {
       (data as Record<string, string>)[key] = value;
     }
@@ -59,14 +55,22 @@ export async function readCredentials(homeDir?: string): Promise<CredentialsData
   return parseDotEnv(raw);
 }
 
+function serializeCredentialEntry(key: keyof CredentialsData, value: string | undefined): string | null {
+  if (value === undefined) return null;
+  if (/[\r\n\0]/.test(value)) {
+    throw new Error(`${key} must be a single-line value`);
+  }
+  return `${key}=${value}`;
+}
+
 function serializeCredentials(data: CredentialsData): string {
   const lines = [
-    `KK_API_BASE_URL=${data.KK_API_BASE_URL}`,
-    `KK_API_TOKEN=${data.KK_API_TOKEN}`
-  ];
-  if (data.KK_MCP_ENABLE_DELETE !== undefined) lines.push(`KK_MCP_ENABLE_DELETE=${data.KK_MCP_ENABLE_DELETE}`);
-  if (data.KK_MCP_DEFAULT_STATUS !== undefined) lines.push(`KK_MCP_DEFAULT_STATUS=${data.KK_MCP_DEFAULT_STATUS}`);
-  if (data.KK_MCP_MAX_LIST_LIMIT !== undefined) lines.push(`KK_MCP_MAX_LIST_LIMIT=${data.KK_MCP_MAX_LIST_LIMIT}`);
+    serializeCredentialEntry('KK_API_BASE_URL', data.KK_API_BASE_URL),
+    serializeCredentialEntry('KK_API_TOKEN', data.KK_API_TOKEN),
+    serializeCredentialEntry('KK_MCP_ENABLE_DELETE', data.KK_MCP_ENABLE_DELETE),
+    serializeCredentialEntry('KK_MCP_DEFAULT_STATUS', data.KK_MCP_DEFAULT_STATUS),
+    serializeCredentialEntry('KK_MCP_MAX_LIST_LIMIT', data.KK_MCP_MAX_LIST_LIMIT)
+  ].filter((line): line is string => Boolean(line));
   return `${lines.join('\n')}\n`;
 }
 

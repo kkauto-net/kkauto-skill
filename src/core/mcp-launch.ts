@@ -12,11 +12,29 @@ export interface BuildMcpInputOptions {
   optionalEnv?: Partial<CredentialsData>;
 }
 
+function shellSingleQuote(value: string): string {
+  return `'${value.replace(/'/g, `'\\''`)}'`;
+}
+
+export function credentialsShellExportScript(credentialsFilePath: string): string {
+  const escaped = shellSingleQuote(credentialsFilePath);
+  return [
+    'while IFS= read -r line || [ -n "$line" ]; do',
+    'case "$line" in \'\'|\'#\'*) continue ;; esac;',
+    'case "$line" in *=*) ;; *) continue ;; esac;',
+    'key="${line%%=*}";',
+    'value="${line#*=}";',
+    'case "$key" in',
+    'KK_API_BASE_URL|KK_API_TOKEN|KK_MCP_ENABLE_DELETE|KK_MCP_DEFAULT_STATUS|KK_MCP_MAX_LIST_LIMIT) export "$key=$value" ;;',
+    'esac;',
+    `done < ${escaped}`
+  ].join(' ');
+}
+
 export function wrapperLaunchScript(credentialsFilePath: string): { command: string; args: string[] } {
-  const escaped = credentialsFilePath.replace(/'/g, `'\\''`);
   return {
     command: 'bash',
-    args: ['-lc', `set -a && source '${escaped}' && set +a && exec ${MCP_COMMAND} ${MCP_ARGS.join(' ')}`]
+    args: ['-lc', `${credentialsShellExportScript(credentialsFilePath)}; exec ${MCP_COMMAND} ${MCP_ARGS.join(' ')}`]
   };
 }
 

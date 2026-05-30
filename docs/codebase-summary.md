@@ -59,7 +59,7 @@ Default packs from `skills/manifest.json`: `core`, `source-workflows`, `fb-posts
 | Concern | Current behavior |
 | --- | --- |
 | Credentials | Stored at `~/.config/kkauto-skill/credentials.env`; writes use chmod `0600`. |
-| Default MCP launch | Bash wrapper sources `credentials.env`; real tokens are not inlined by default. |
+| Default MCP launch | Bash wrapper parses whitelisted `credentials.env` keys literally; real tokens are not inlined by default. |
 | Placeholder mode | Explicit via `--use-placeholders`, or fallback when no usable credentials exist. |
 | Registry | `~/.config/kkauto-skill/registry.json`; update replays registry installs. |
 | Cursor update | Uses registered Cursor project path, not current working directory. |

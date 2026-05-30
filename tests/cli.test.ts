@@ -126,6 +126,30 @@ describe('compiled CLI behavior', () => {
     await expect(access(registryPath(homeDir))).rejects.toThrow();
   });
 
+  it('keeps default wrapper installs from leaking credentials into output or config', async () => {
+    const homeDir = await mkdtemp(join(tmpdir(), 'kkauto-cli-wrapper-home-'));
+    const sentinelToken = 'sentinel-token-for-cli-wrapper-test';
+    const sentinelUrl = 'https://sentinel-wrapper.example.com';
+    const { stdout } = await execCli(['install', '--agent', 'opencode', '--packs', 'core', '--json', '--no-interactive'], {
+      HOME: homeDir,
+      KK_API_BASE_URL: sentinelUrl,
+      KK_API_TOKEN: sentinelToken,
+      KKAUTO_SKILL_ROOT: process.cwd()
+    });
+
+    expect(stdout).not.toContain(sentinelToken);
+    expect(stdout).not.toContain(sentinelUrl);
+
+    const opencodeConfig = await readFile(join(homeDir, '.config', 'opencode', 'opencode.json'), 'utf8');
+    expect(opencodeConfig).toContain('credentials.env');
+    expect(opencodeConfig).not.toContain(sentinelToken);
+    expect(opencodeConfig).not.toContain(sentinelUrl);
+
+    const credentials = await readFile(join(homeDir, '.config', 'kkauto-skill', 'credentials.env'), 'utf8');
+    expect(credentials).toContain(sentinelToken);
+    expect(credentials).toContain(sentinelUrl);
+  });
+
   it('runs a full multi-agent install through the compiled CLI', async () => {
     const homeDir = await mkdtemp(join(tmpdir(), 'kkauto-cli-full-home-'));
     const projectDir = await mkdtemp(join(tmpdir(), 'kkauto-cli-full-project-'));
